@@ -37,7 +37,7 @@ app.get('/users/:id', (req, res) => {
   const { id } = req.params;
   const user = state.users.find((user) => user.id === parseInt(id));
   if (!user) {
-    res.code(404).send({ message: 'User not found' });
+    res.code(404).send('User not found');
   } else {
     res.send(user);
   }

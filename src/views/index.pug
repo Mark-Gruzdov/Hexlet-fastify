@@ -1,8 +1,14 @@
-doctype html
-html(lang='en')
-head
-    title Hello Hexlet!
-body
-    main
-    h1 Hello, World!
-    p Fastify + Pug
+extends layouts/page.pug
+
+block title 
+    title Главная страница
+
+block header
+    h1 Добро пожаловать на главную страницу
+
+block content
+    h2 
+        a(href='/courses') Курсы
+
+block footer
+    h3 блок footer

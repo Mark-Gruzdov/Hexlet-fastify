@@ -1,13 +1,20 @@
-html
-head
-    title Хекслет
-body
-    h1= header
-    if courses.length === 0
-      p Пока не добавлено ни одного курса
-    else
-      each course in courses
-        div
+extends ../layouts/page.pug
+
+block title
+  title Список курсов
+
+block header 
+  h1= header
+
+block content
+  if courses.length === 0
+    p Пока не добавлено ни одного курса
+  else
+    each course in courses
+      div
+        #{course.title}
           h2
             a(href=`/courses/${course.id}`)= course.title
           p= course.description
+  h3 
+    a(href='/') Назад

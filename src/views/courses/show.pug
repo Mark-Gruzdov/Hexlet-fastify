@@ -1,8 +1,12 @@
-doctype html
-html
-  head
-    title Hello Hexlet!
-  body
-    main
-      h1= course.title
-      p= course.description
+extends ../layouts/page.pug
+
+block title
+  title= course.title
+
+block header 
+  h1= course.title
+
+block content
+  p= course.description
+  h3 
+    a(href='/courses') Назад
