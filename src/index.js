@@ -1,4 +1,5 @@
 import fastify from 'fastify';
+import sanitize from 'sanitize-html';
 import view from '@fastify/view';
 import pug from 'pug';
 
@@ -56,7 +57,7 @@ app.get('/courses/new', (req, res) => {
 });
 
 app.get('/courses/:id', (req, res) => {
-  const { id } = req.params
+  const { id } = req.params;
   const course = state.courses.find(({ id: courseId }) => courseId === parseInt(id));
   if (!course) {
     res.code(404).send({ message: 'Course not found' });
@@ -73,7 +74,7 @@ app.get('/courses/:courseId/lessons/:id', (req, res) => {
 });
 
 app.get('/hello', (req, res) => {
-  const name = req.query.name;
+  const name = sanitize(req.query.name);
   if (!name) {
     res.send('Hello, World!');
   } else {
