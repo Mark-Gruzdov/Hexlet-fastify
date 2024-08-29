@@ -23,6 +23,11 @@ const state = {
       title: 'JS: Функции',
       description: 'Курс про функции в JavaScript',
     },
+    {
+      id: 3,
+      title: 'JS: Объекты',
+      description: 'Курс про объекты в JavaScript',
+    },
   ],
 };
 
@@ -41,10 +46,18 @@ app.get('/users/:id', (req, res) => {
 });
 
 app.get('/courses', (req, res) => {
+  const term = req.query.term ?? '';
   const data = {
-    courses: state.courses, // Где-то хранится список курсов
+    term,
     header: 'Курсы по программированию',
   };
+
+  if (term.length > 0) {
+    data.courses = state.courses.filter((course) => course.id === parseInt(term));
+  } else {
+    data.courses = state.courses;
+  }
+  
   res.view('src/views/courses/index', data);
 });
 
