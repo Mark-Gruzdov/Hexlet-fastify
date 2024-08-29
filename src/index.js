@@ -35,13 +35,9 @@ app.get('/users', (req, res) => {
 });
 
 app.get('/users/:id', (req, res) => {
-  const { id } = req.params;
-  const user = state.users.find((user) => user.id === parseInt(id));
-  if (!user) {
-    res.code(404).send('User not found');
-  } else {
-    res.send(user);
-  }
+  const escapedId = sanitize(req.params.id);
+  res.type('html');
+  res.send(`<h1>${escapedId}</h1>`);
 });
 
 app.get('/courses', (req, res) => {
@@ -70,7 +66,9 @@ app.get('/courses/:id', (req, res) => {
 });
 
 app.get('/courses/:courseId/lessons/:id', (req, res) => {
-  res.send(`Course ID: ${req.params.courseId}; Lesson ID: ${req.params.id}`);
+  const sanitizeCourse = sanitize(req.params.courseId);
+  const sanitizeLesson = sanitize(req.params.id);
+  res.send(`Course ID: ${sanitizeCourse}; Lesson ID: ${sanitizeLesson}`);
 });
 
 app.get('/hello', (req, res) => {
