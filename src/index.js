@@ -53,7 +53,7 @@ app.get('/courses', (req, res) => {
   };
 
   if (term.length > 0) {
-    data.courses = state.courses.filter((course) => course.id === parseInt(term));
+    data.courses = state.courses.filter((course) => course.id === parseInt(term) || course.description.includes(term));
   } else {
     data.courses = state.courses;
   }
