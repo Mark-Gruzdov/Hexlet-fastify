@@ -1,0 +1,29 @@
+extends ../layouts/page.pug
+
+block title
+  title Добавить новый курс
+
+block header
+  div.collapse.navbar-collapse.show
+    ul
+      li.nav-item
+        h1= header
+      li.nav-item
+        h3 
+          a(href='/') На главную
+
+block content
+  form(action = '/courses', method = 'post')
+    div
+      label ID:
+        input(type = 'text', name = 'id', required = true)
+    div
+      label Title:
+        input(type = 'text', name = 'title', required = true)
+    div
+      label Description:
+        input(type = 'text', name = 'description', required = true)
+   
+    input(type = 'submit', value = 'Добавить')
+  h3 
+    a(href='/courses') Назад

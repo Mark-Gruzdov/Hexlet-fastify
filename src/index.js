@@ -1,6 +1,7 @@
 import fastify from 'fastify';
-import sanitize from 'sanitize-html';
+import formbody from '@fastify/formbody';
 import view from '@fastify/view';
+import sanitize from 'sanitize-html';
 import pug from 'pug';
 
 const app = fastify();
@@ -9,7 +10,9 @@ const state = {
   users: [
     {
       id: 1,
-      name: 'user',
+      username: 'user',
+      email: 'user@test.test',
+      password: 'test'
     },
   ],
   courses: [
@@ -31,12 +34,32 @@ const state = {
   ],
 };
 
+await app.register(formbody);
 await app.register(view, { engine: { pug } });
 
 app.get('/', (req, res) => res.view('src/views/index'));
 
 app.get('/users', (req, res) => {
-  res.send('GET /users');
+  const { term } = req.query;
+  const data = {
+    term,
+    header: 'Список пользователей',
+  };
+
+  if (term) {
+    data.users = state.users.filter((user) => user.id === parseInt(term) 
+      || user.username.toLowerCase().includes(term.toLowerCase()));
+  } else {
+    data.users = state.users;
+  }
+  res.view('src/views/users/index', data);
+});
+
+app.get('/users/new', (req, res) => {
+  const data = {
+    header: 'Создать нового пользователя'
+  }
+  res.view('src/views/users/new', data);
 });
 
 app.get('/users/:id', (req, res) => {
@@ -46,23 +69,26 @@ app.get('/users/:id', (req, res) => {
 });
 
 app.get('/courses', (req, res) => {
-  const term = req.query.term ?? '';
+  const { term } = req.query;
   const data = {
     term,
     header: 'Курсы по программированию',
   };
 
-  if (term.length > 0) {
-    data.courses = state.courses.filter((course) => course.id === parseInt(term) || course.description.includes(term));
+  if (term) {
+    data.courses = state.courses.filter((course) => course.id === parseInt(term) 
+      || course.description.toLowerCase().includes(term.toLowerCase()));
   } else {
     data.courses = state.courses;
   }
-  
   res.view('src/views/courses/index', data);
 });
 
 app.get('/courses/new', (req, res) => {
-  res.send('Course build');
+  const data = {
+    header: 'Создать нового пользователя'
+  }
+  res.view('src/views/courses/new', data);
 });
 
 app.get('/courses/:id', (req, res) => {
@@ -94,7 +120,27 @@ app.get('/hello', (req, res) => {
 });
 
 app.post('/users', (req, res) => {
-  res.send('POST /users');
+  const user = {
+    username: req.body.name.trim(),
+    email: req.body.email.trim().toLowerCase(),
+    password: req.body.password,
+  };
+
+  state.users.push(user);
+
+  res.redirect('/users');
+});
+
+app.post('/courses', (req, res) => {
+  const course = {
+    id: parseInt(req.body.id),
+    title: req.body.title.trim(),
+    description: req.body.description.trim(),
+  };
+
+  state.courses.push(course);
+
+  res.redirect('/courses');
 });
 
 app.listen({ port }, () => {

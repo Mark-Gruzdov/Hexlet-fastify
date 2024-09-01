@@ -1,0 +1,38 @@
+extends ../layouts/page.pug
+
+block title
+  title Список пользователей
+
+block header
+  div.collapse.navbar-collapse.show
+    ul
+      li.nav-item
+        h1= header
+      li.nav-item
+        h3 
+          a(href='/') На главную
+      li.nav-item
+        form(role = 'form' method = 'GET' action = '/users')
+          input(type = 'search', name = 'term', value = term)
+          input(type = 'submit' value = 'search')
+
+block content
+  h3  
+    a(href='/users/new') Создать нового пользователя
+  if users.length === 0
+    p Пользователи не найдены
+  else
+    table.table.table-striped
+      tr
+        th Идентификатор пользователя
+        th Имя пользователя
+        th Емейл пользователя
+
+      each user, index in users
+        tr
+          td
+            a(href='/users/' + user.id) #{user.id}
+          td= user.username
+          td= user.email
+  h3 
+    a(href='/') Назад

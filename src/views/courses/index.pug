@@ -4,14 +4,21 @@ block title
   title Список курсов
 
 block header 
-  h1= header
-  h3 
-    a(href='/') На главную
-  form(role = 'form' method = 'GET' action = '/courses')
-    input(type = 'search', name = 'term', value = term)
-    input(type = 'submit' value = 'search')
+  div.collapse.navbar-collapse.show
+    ul
+      li.nav-item
+        h1= header
+      li.nav-item
+        h3 
+          a(href='/') На главную
+      li.nav-item
+        form(role = 'form' method = 'GET' action = '/сourses')
+          input(type = 'search', name = 'term', value = term)
+          input(type = 'submit' value = 'search')
 
 block content
+  h3  
+    a(href='/courses/new') Добавить новый курс
   if courses.length === 0
     p Пока не добавлено ни одного курса
   else

@@ -4,9 +4,13 @@ block title
   title= course.title
 
 block header 
-  h1= course.title
-  h3 
-    a(href='/') На главную
+  iv.collapse.navbar-collapse.show
+    ul
+      li.nav-item
+        h1= course.title
+      li.nav-item
+        h3 
+          a(href='/') На главную
 
 block content
   p= course.description

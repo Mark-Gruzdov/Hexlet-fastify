@@ -1,0 +1,31 @@
+extends ../layouts/page.pug
+
+block title
+  title Создать нового пользователя
+
+block header
+  div.collapse.navbar-collapse.show
+    ul
+      li.nav-item
+        h1= header
+      li.nav-item
+        h3 
+          a(href='/') На главную
+
+block content
+  form(action = '/users', method = 'post')
+    div
+      label Имя:
+        input(type = 'text', name = 'name')
+    div
+      label Email:
+        input(type = 'email', name = 'email', required = true)
+    div
+      label Пароль:
+        input(type = 'password', name = 'password', required = true)
+    div
+      label Подтверждение пароля:
+        input(type = 'password', name = 'passwordConfirmation', required = true)
+    input(type = 'submit', value = 'Зарегистрировать')
+  h3 
+    a(href='/users') Назад
