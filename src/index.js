@@ -121,6 +121,7 @@ app.get('/hello', (req, res) => {
 
 app.post('/users', (req, res) => {
   const user = {
+    id: parseInt(req.body.id.trim()),
     username: req.body.name.trim(),
     email: req.body.email.trim().toLowerCase(),
     password: req.body.password,
@@ -133,7 +134,7 @@ app.post('/users', (req, res) => {
 
 app.post('/courses', (req, res) => {
   const course = {
-    id: parseInt(req.body.id),
+    id: parseInt(req.body.id.trim()),
     title: req.body.title.trim(),
     description: req.body.description.trim(),
   };
