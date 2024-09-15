@@ -13,6 +13,9 @@ block header
           a(href='/') На главную
 
 block content
+  if error
+      p= error.message
+      
   form(action = '/courses', method = 'post')
     div
       label ID:

@@ -13,13 +13,16 @@ block header
           a(href='/') На главную
 
 block content
+  if error
+    p= error.message
+
   form(action = '/users', method = 'post')
     div
       label ID:
         input(type = 'text', name = 'id', required = true)
     div
       label Имя:
-        input(type = 'text', name = 'name')
+        input(type = 'text', name = 'username')
     div
       label Email:
         input(type = 'email', name = 'email', required = true)
