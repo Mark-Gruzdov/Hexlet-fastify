@@ -10,9 +10,9 @@ block header
         h1= course.title
       li.nav-item
         h3 
-          a(href='/') На главную
+          a(href= routes.mainPagePath()) На главную
 
 block content
   p= course.description
   h3 
-    a(href='/courses') Назад
+    a(href= routes.coursesPath()) Назад

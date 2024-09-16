@@ -10,7 +10,7 @@ block header
         h1= header
       li.nav-item
         h3 
-          a(href='/') На главную
+          a(href= routes.mainPagePath()) На главную
       li.nav-item
         form(role = 'form' method = 'GET' action = '/сourses')
           input(type = 'search', name = 'term', value = term)
@@ -18,7 +18,7 @@ block header
 
 block content
   h3  
-    a(href='/courses/new') Добавить новый курс
+    a(href= routes.newCoursePath()) Добавить новый курс
   if courses.length === 0
     p Пока не добавлено ни одного курса
   else
@@ -26,7 +26,7 @@ block content
       div
         #{course.title}
           h2
-            a(href=`/courses/${course.id}`)= course.title
+            a(href= routes.coursePath(course.id))= course.title
           p= course.description
   h3 
-    a(href='/') Назад
+    a(href= routes.mainPagePath()) Назад

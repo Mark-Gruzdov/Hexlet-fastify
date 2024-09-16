@@ -10,13 +10,13 @@ block header
         h1= header
       li.nav-item
         h3 
-          a(href='/') На главную
+          a(href= routes.mainPagePath()) На главную
 
 block content
   if error
     p= error.message
 
-  form(action = '/users', method = 'post')
+  form(action = routes.usersPath(), method = 'post')
     div
       label ID:
         input(type = 'text', name = 'id', required = true)
@@ -34,4 +34,4 @@ block content
         input(type = 'password', name = 'passwordConfirmation', required = true)
     input(type = 'submit', value = 'Зарегистрировать')
   h3 
-    a(href='/users') Назад
+    a(href= routes.usersPath()) Назад

@@ -7,6 +7,15 @@ import pug from 'pug';
 
 const app = fastify();
 const port = 3000;
+const routes = {
+  mainPagePath: () => '/',
+  usersPath: () => '/users',
+  newUserPath: () => '/users/new',
+  userPath: (id) => `/users/${id}`,
+  coursesPath: () => '/courses',
+  newCoursePath: () => '/courses/new',
+  coursePath: (id) => `/courses/${id}`,
+};
 const state = {
   users: [
     {
@@ -38,13 +47,14 @@ const state = {
 await app.register(formbody);
 await app.register(view, { engine: { pug } });
 
-app.get('/', (req, res) => res.view('src/views/index'));
+app.get(routes.mainPagePath(), (req, res) => res.view('src/views/index', routes));
 
-app.get('/users', (req, res) => {
+app.get(routes.usersPath(), (req, res) => {
   const { term } = req.query;
   const data = {
     term,
     header: 'Список пользователей',
+    routes,
   };
 
   if (term) {
@@ -56,24 +66,26 @@ app.get('/users', (req, res) => {
   res.view('src/views/users/index', data);
 });
 
-app.get('/users/new', (req, res) => {
+app.get(routes.newUserPath(), (req, res) => {
   const data = {
-    header: 'Создать нового пользователя'
+    header: 'Создать нового пользователя',
+    routes,
   }
   res.view('src/views/users/new', data);
 });
 
-app.get('/users/:id', (req, res) => {
+app.get(routes.userPath(':id'), (req, res) => {
   const escapedId = sanitize(req.params.id);
   res.type('html');
   res.send(`<h1>${escapedId}</h1>`);
 });
 
-app.get('/courses', (req, res) => {
+app.get(routes.coursesPath(), (req, res) => {
   const { term } = req.query;
   const data = {
     term,
     header: 'Курсы по программированию',
+    routes,
   };
 
   if (term) {
@@ -85,14 +97,15 @@ app.get('/courses', (req, res) => {
   res.view('src/views/courses/index', data);
 });
 
-app.get('/courses/new', (req, res) => {
+app.get(routes.newCoursePath(), (req, res) => {
   const data = {
-    header: 'Добавить новый курс'
+    header: 'Добавить новый курс',
+    routes,
   }
   res.view('src/views/courses/new', data);
 });
 
-app.get('/courses/:id', (req, res) => {
+app.get(routes.coursePath(':id'), (req, res) => {
   const { id } = req.params;
   const course = state.courses.find(({ id: courseId }) => courseId === parseInt(id));
   if (!course) {
@@ -101,6 +114,7 @@ app.get('/courses/:id', (req, res) => {
   }
   const data = {
     course,
+    routes,
   };
   res.view('src/views/courses/show', data);
 });
@@ -120,7 +134,7 @@ app.get('/hello', (req, res) => {
   }
 });
 
-app.post('/users', {
+app.post(routes.usersPath(), {
   attachValidation: true,
   schema: {
     body: yup.object({
@@ -152,6 +166,7 @@ app.post('/users', {
       id, username, email, password, passwordConfirmation,
       header: 'Создать нового пользователя',
       error: req.validationError,
+      routes,
     };
 
     res.view('src/views/users/new', data);
@@ -163,14 +178,15 @@ app.post('/users', {
     username: username.trim(),
     email: email.trim().toLowerCase(),
     password: password,
+    routes,
   };
 
   state.users.push(user);
 
-  res.redirect('/users');
+  res.redirect(routes.usersPath());
 });
 
-app.post('/courses', {
+app.post(routes.coursesPath(), {
   attachValidation: true,
   schema: {
     body: yup.object({
@@ -180,7 +196,7 @@ app.post('/courses', {
     }),
   },
   validatorCompiler: ({ schema, method, url, httpPart }) => (data) => {
-    if (data.password !== data.passwordConfirmation) {
+    if (data.title !== data.passwordConfirmation) {
       return {
         error: Error('Password confirmation is not equal the password'),
       };
@@ -200,6 +216,7 @@ app.post('/courses', {
       id, title, description,
       header: 'Добавить новый курс',
       error: req.validationError,
+      routes,
     };
 
     res.view('src/views/courses/new', data);
@@ -210,11 +227,12 @@ app.post('/courses', {
     id: parseInt(id),
     title: title.trim(),
     description: description.trim(),
+    routes,
   };
 
   state.courses.push(course);
 
-  res.redirect('/courses');
+  res.redirect(routes.coursesPath());
 });
 
 app.listen({ port }, () => {
