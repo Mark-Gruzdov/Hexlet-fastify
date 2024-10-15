@@ -4,6 +4,7 @@ import view from '@fastify/view';
 import pug from 'pug';
 import routes from './routes/index.js';
 
+
 const app = fastify();
 const port = 3000;
 

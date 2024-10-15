@@ -18,7 +18,7 @@ const state = {
   ],
 };
 
-async function usersRoutes(app) {
+export default (app) => {
 
   // Просмотр списка пользователей
   app.get(routes.usersPath(), (req, res) => {
@@ -111,5 +111,3 @@ async function usersRoutes(app) {
   });
 
 };
-
-export default usersRoutes;

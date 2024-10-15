@@ -27,7 +27,7 @@ const state = {
   ],
 };
 
-async function coursesRoutes(app) {
+export default (app) => {
   
   // Просмотр списка курсов
   app.get(routes.coursesPath(), (req, res) => {
@@ -93,11 +93,6 @@ async function coursesRoutes(app) {
       }),
     },
     validatorCompiler: ({ schema, method, url, httpPart }) => (data) => {
-      if (data.title !== data.passwordConfirmation) {
-        return {
-          error: Error('Password confirmation is not equal the password'),
-        };
-      }
       try {
         const result = schema.validateSync(data);
         return { value: result };
@@ -132,5 +127,3 @@ async function coursesRoutes(app) {
     res.redirect(routes.coursesPath());
   });
 };
-
-export default coursesRoutes;

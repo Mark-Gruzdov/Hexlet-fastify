@@ -6,7 +6,7 @@ const routes = {
   coursesPath: () => '/courses',
 };
 
-async function rootRoutes(app) {
+export default (app) => {
 
   // Просмотр главной страницы
   app.get(routes.mainPagePath(), (req, res) => res.view('src/views/index', routes));
@@ -23,5 +23,3 @@ async function rootRoutes(app) {
   });
 
 };
-
-export default rootRoutes;
