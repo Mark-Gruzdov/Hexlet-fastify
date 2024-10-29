@@ -9,7 +9,15 @@ const routes = {
 export default (app) => {
 
   // Просмотр главной страницы
-  app.get(routes.mainPagePath(), (req, res) => res.view('src/views/index', routes));
+  app.get(routes.mainPagePath(), (req, res) => {
+    const visited = req.cookies.visited;
+    const templateData = {
+      visited,
+    };
+    res.cookie('visited', true);
+
+    res.view('src/views/index', {routes, templateData});
+  });
 
 
   // Первый запрос с приветствием
