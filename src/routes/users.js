@@ -1,5 +1,6 @@
 import * as yup from 'yup';
 import sanitize from 'sanitize-html';
+import encrypt from '../encrypt.js';
 
 const routes = {
   mainPagePath: () => '/',
@@ -7,13 +8,13 @@ const routes = {
   newUserPath: () => '/users/new',
   userPath: (id) => `/users/${id}`,
 };
-const state = {
+export const state = {
   users: [
     {
       id: 1,
       username: 'user',
       email: 'user@test.test',
-      password: 'test'
+      password: 'd5c4989f33ec1bf0edc5258e8202e95da5a73dac491a27742571662322fbb230589b379e1fd088bb1a12156e6cd1154cf3fdc1079d65b6c9c917904b0cb603e2' // password test
     },
   ],
 };
@@ -35,7 +36,7 @@ export default (app) => {
     } else {
       data.users = state.users;
     }
-    res.view('src/views/users/index', data);
+    res.view('views/users/index', data);
   });
 
 
@@ -45,7 +46,7 @@ export default (app) => {
       header: 'Создать нового пользователя',
       routes,
     }
-    res.view('src/views/users/new', data);
+    res.view('views/users/new', data);
   });
 
 
@@ -93,7 +94,7 @@ export default (app) => {
         routes,
       };
 
-      res.view('src/views/users/new', data);
+      res.view('views/users/new', data);
       return;
     }
 
@@ -101,7 +102,7 @@ export default (app) => {
       id: parseInt(id),
       username: username.trim(),
       email: email.trim().toLowerCase(),
-      password: password,
+      password: encrypt(password),
       routes,
     };
 

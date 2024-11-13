@@ -44,7 +44,7 @@ export default (app) => {
     } else {
       data.courses = state.courses;
     }
-    res.view('src/views/courses/index', data);
+    res.view('views/courses/index', data);
   });
 
 
@@ -54,7 +54,7 @@ export default (app) => {
       header: 'Добавить новый курс',
       routes,
     }
-    res.view('src/views/courses/new', data);
+    res.view('views/courses/new', data);
   });
 
 
@@ -70,7 +70,7 @@ export default (app) => {
       course,
       routes,
     };
-    res.view('src/views/courses/show', data);
+    res.view('views/courses/show', data);
   });
 
 
@@ -111,7 +111,7 @@ export default (app) => {
         routes,
       };
 
-      res.view('src/views/courses/new', data);
+      res.view('views/courses/new', data);
       return;
     }
 

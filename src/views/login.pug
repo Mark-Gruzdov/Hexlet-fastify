@@ -1,0 +1,26 @@
+extends layouts/page.pug
+
+block title
+  title Аутентификация
+
+block header
+  div.collapse.navbar-collapse.show
+    ul
+      li.nav-item
+        h1= header
+      li.nav-item
+        h3 
+          a(href= routes.mainPagePath()) На главную
+
+block content
+  if error
+      p= error.message
+
+  form(action = '/session', method = 'post')
+    div
+      label Логин:
+        input(type = 'email', name = 'email', required = true)
+    div
+      label Пароль:
+        input(type = 'password', name = 'password', required = true)
+    input(type = 'submit', value = 'Аутентификация!')

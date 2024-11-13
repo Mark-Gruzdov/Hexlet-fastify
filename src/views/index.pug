@@ -10,6 +10,8 @@ block content
     if !templateData.visited
         | Это сообщение показывается только один раз. Если вы хотите увидеть его снова, сотрите куки
 
+    h2
+        a(href= routes.loginPath()) Войти
     h2 
         a(href= routes.coursesPath()) Курсы
     h2 
