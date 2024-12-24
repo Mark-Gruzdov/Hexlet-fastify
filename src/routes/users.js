@@ -36,7 +36,7 @@ export default (app) => {
     } else {
       data.users = state.users;
     }
-    res.view('views/users/index', data);
+    res.view('src/views/users/index', { data, messages: res.flash('success') });
   });
 
 
@@ -46,7 +46,7 @@ export default (app) => {
       header: 'Создать нового пользователя',
       routes,
     }
-    res.view('views/users/new', data);
+    res.view('src/views/users/new', data);
   });
 
 
@@ -87,14 +87,17 @@ export default (app) => {
     const { id, username, email, password, passwordConfirmation } = req.body;
 
     if (req.validationError) {
+      req.flash('error', { type: 'info', message: 'Ошибка регистрации' });
+
       const data = {
         id, username, email, password, passwordConfirmation,
         header: 'Создать нового пользователя',
         error: req.validationError,
+        messages: res.flash('error'),
         routes,
       };
 
-      res.view('views/users/new', data);
+      res.view('src/views/users/new', data);
       return;
     }
 
@@ -107,7 +110,7 @@ export default (app) => {
     };
 
     state.users.push(user);
-
+    req.flash('success', { type: 'success', message: 'Пользователь зарегистрирован' });
     res.redirect(routes.usersPath());
   });
 

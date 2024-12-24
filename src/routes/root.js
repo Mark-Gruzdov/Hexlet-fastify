@@ -19,7 +19,7 @@ export default (app) => {
     };
     res.cookie('visited', true);
 
-    res.view('views/index', {routes, templateData});
+    res.view('src/views/index', {routes, templateData});
   });
 
   // Просмотр страницы аутентификации
@@ -29,7 +29,7 @@ export default (app) => {
       routes,
     }
 
-    res.view('views/login', data);
+    res.view('src/views/login', data);
   });
 
   app.post('/session', (req, res) => {

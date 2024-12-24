@@ -5,6 +5,7 @@ import formbody from '@fastify/formbody';
 import routes from './routes/index.js';
 import fastifyCookie from '@fastify/cookie';
 import session from '@fastify/session';
+import flash from '@fastify/flash';
 
 
 const app = fastify();
@@ -17,6 +18,7 @@ await app.register(session, {
   secret: 'a secret with minimum length of 32 characters',
   cookie: { secure: false },
 });
+await app.register(flash);
 await app.register(routes);
 
 
