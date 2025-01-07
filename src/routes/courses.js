@@ -1,5 +1,6 @@
 import sanitize from 'sanitize-html';
 import * as yup from 'yup';
+import db from '../index.js';
 
 const routes = {
   mainPagePath: () => '/',
@@ -7,44 +8,30 @@ const routes = {
   newCoursePath: () => '/courses/new',
   coursePath: (id) => `/courses/${id}`,
 };
-const state = {
-  courses: [
-    {
-      id: 1,
-      title: 'JS: Массивы',
-      description: 'Курс про массивы в JavaScript',
-    },
-    {
-      id: 2,
-      title: 'JS: Функции',
-      description: 'Курс про функции в JavaScript',
-    },
-    {
-      id: 3,
-      title: 'JS: Объекты',
-      description: 'Курс про объекты в JavaScript',
-    },
-  ],
-};
 
 export default (app) => {
   
   // Просмотр списка курсов
   app.get(routes.coursesPath(), (req, res) => {
     const { term } = req.query;
-    const data = {
-      term,
-      header: 'Курсы по программированию',
-      routes,
-    };
 
-    if (term) {
-      data.courses = state.courses.filter((course) => course.id === parseInt(term) 
-        || course.description.toLowerCase().includes(term.toLowerCase()));
-    } else {
-      data.courses = state.courses;
-    }
-    res.view('src/views/courses/index', data);
+    db.all('SELECT * FROM courses', (error, data) => {
+      const templateData = {
+        term,
+        header: 'Курсы по программированию',
+        messages: res.flash('success'),
+        routes,
+        error,
+      };
+
+      if (term) {
+        templateData.courses = data.filter((course) => course.id === parseInt(term) 
+          || course.description.toLowerCase().includes(term.toLowerCase()));
+      } else {
+        templateData.courses = data;
+      }
+      res.view('src/views/courses/index', templateData);
+    });
   });
 
 
@@ -61,16 +48,20 @@ export default (app) => {
   // Просмотр конкретного курса
   app.get(routes.coursePath(':id'), (req, res) => {
     const { id } = req.params;
-    const course = state.courses.find(({ id: courseId }) => courseId === parseInt(id));
-    if (!course) {
-      res.code(404).send({ message: 'Course not found' });
-      return;
-    }
-    const data = {
-      course,
-      routes,
-    };
-    res.view('src/views/courses/show', data);
+
+    db.all('SELECT * FROM courses', (error, data) => {
+      const course = data.find(({ id: courseId }) => courseId === parseInt(id));
+      if (!course) {
+        res.code(404).send({ message: 'Course not found' });
+        return;
+      }
+      const templateData = {
+        course,
+        routes,
+        error
+      };
+      res.view('src/views/courses/show', templateData)
+    });
   });
 
 
@@ -104,14 +95,17 @@ export default (app) => {
     const { id, title, description } = req.body;
 
     if (req.validationError) {
+      req.flash('error', { type: 'info', message: 'Ошибка создания нового курса' });
+      
       const data = {
         id, title, description,
         header: 'Добавить новый курс',
+        messages: res.flash('error'),
         error: req.validationError,
         routes,
       };
 
-      res.view('views/courses/new', data);
+      res.view('src/views/courses/new', data);
       return;
     }
 
@@ -122,8 +116,25 @@ export default (app) => {
       routes,
     };
 
-    state.courses.push(course);
+    const stmt = db.prepare('INSERT INTO courses VALUES (?, ?, ?)');
 
-    res.redirect(routes.coursesPath());
+    stmt.run([course.id, course.title, course.description], function (error) {
+      if (error) {
+        req.flash('error', { type: 'info', message: 'Ошибка записи нового курса' });
+        const templateData = {
+          id: course.id,
+          title: course.title,
+          description: course.title,
+          header: 'Добавить новый курс',
+          messages: res.flash('error'),
+          error,
+          routes,
+        };
+        res.view('src/views/courses/new', templateData);
+        return;
+      }
+      req.flash('success', { type: 'success', message: 'Новый курс создан' });
+      res.redirect(routes.coursesPath());
+    });
   });
 };

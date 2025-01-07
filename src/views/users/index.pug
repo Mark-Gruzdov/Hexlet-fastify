@@ -7,12 +7,12 @@ block header
   div.collapse.navbar-collapse.show
     ul
       li.nav-item
-        h1= data.header
+        h1= header
       li.nav-item
         h3 
-          a(href= data.routes.mainPagePath()) На главную
+          a(href= routes.mainPagePath()) На главную
       li.nav-item
-        form(role = 'form' method = 'GET' action = data.routes.usersPath())
+        form(role = 'form' method = 'GET' action = routes.usersPath())
           input(type = 'search', name = 'term', value = term)
           input(type = 'submit' value = 'search')
 
@@ -22,8 +22,8 @@ block content
       .alert(class=`alert-${message.type}`)= message.message
 
   h3  
-    a(href= data.routes.newUserPath()) Создать нового пользователя
-  if data.users.length === 0
+    a(href= routes.newUserPath()) Создать нового пользователя
+  if users.length === 0
     p Пользователи не найдены
   else
     table.table.table-striped
@@ -32,11 +32,11 @@ block content
         th Имя пользователя
         th Емейл пользователя
 
-      each user, index in data.users
+      each user, index in users
         tr
           td
-            a(href= data.routes.userPath(user.id)) #{user.id}
+            a(href= routes.userPath(user.id)) #{user.id}
           td= user.username
           td= user.email
   h3 
-    a(href= data.routes.mainPagePath()) Назад
+    a(href= routes.mainPagePath()) Назад

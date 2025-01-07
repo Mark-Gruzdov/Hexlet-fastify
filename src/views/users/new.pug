@@ -23,19 +23,19 @@ block content
   form(action = routes.usersPath(), method = 'post')
     div
       label ID:
-        input(type = 'text', name = 'id', required = true)
+        input(type = 'text', name = 'id', value = id || '', required = true)
     div
       label Имя:
-        input(type = 'text', name = 'username')
+        input(type = 'text', name = 'username', value = username || '')
     div
       label Email:
-        input(type = 'email', name = 'email', required = true)
+        input(type = 'email', name = 'email', value = email || '', required = true)
     div
       label Пароль:
-        input(type = 'password', name = 'password', required = true)
+        input(type = 'password', name = 'password', value = password || '', required = true)
     div
       label Подтверждение пароля:
-        input(type = 'password', name = 'passwordConfirmation', required = true)
+        input(type = 'password', name = 'passwordConfirmation', value = passwordConfirmation || '', required = true)
     input(type = 'submit', value = 'Зарегистрировать')
   h3 
     a(href= routes.usersPath()) Назад

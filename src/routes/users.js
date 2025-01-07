@@ -1,6 +1,7 @@
 import * as yup from 'yup';
 import sanitize from 'sanitize-html';
 import encrypt from '../encrypt.js';
+import db from '../index.js';
 
 const routes = {
   mainPagePath: () => '/',
@@ -8,35 +9,30 @@ const routes = {
   newUserPath: () => '/users/new',
   userPath: (id) => `/users/${id}`,
 };
-export const state = {
-  users: [
-    {
-      id: 1,
-      username: 'user',
-      email: 'user@test.test',
-      password: 'd5c4989f33ec1bf0edc5258e8202e95da5a73dac491a27742571662322fbb230589b379e1fd088bb1a12156e6cd1154cf3fdc1079d65b6c9c917904b0cb603e2' // password test
-    },
-  ],
-};
 
 export default (app) => {
 
   // Просмотр списка пользователей
   app.get(routes.usersPath(), (req, res) => {
     const { term } = req.query;
-    const data = {
-      term,
-      header: 'Список пользователей',
-      routes,
-    };
 
-    if (term) {
-      data.users = state.users.filter((user) => user.id === parseInt(term) 
-        || user.username.toLowerCase().includes(term.toLowerCase()));
-    } else {
-      data.users = state.users;
-    }
-    res.view('src/views/users/index', { data, messages: res.flash('success') });
+    db.all('SELECT * FROM users', (error, data) => {
+      const templateData = {
+        term,
+        header: 'Список пользователей',
+        messages: res.flash('success'),
+        routes,
+        error,
+      };
+
+      if (term) {
+        templateData.users = data.filter((user) => user.id === parseInt(term) 
+          || user.username.toLowerCase().includes(term.toLowerCase()));
+      } else {
+        templateData.users = data;
+      }
+      res.view('src/views/users/index', templateData);
+    });
   });
 
 
@@ -109,9 +105,26 @@ export default (app) => {
       routes,
     };
 
-    state.users.push(user);
-    req.flash('success', { type: 'success', message: 'Пользователь зарегистрирован' });
-    res.redirect(routes.usersPath());
-  });
+    const stmt = db.prepare('INSERT INTO users VALUES (?, ?, ?, ?)');
 
+    stmt.run([user.id, user.username, user.email, user.password], function (error) {
+      if (error) {
+        req.flash('error', { type: 'info', message: 'Ошибка записи нового пользователя' });
+        const templateData = {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          password: user.password,
+          header: 'Создать нового пользователя',
+          messages: res.flash('error'),
+          error,
+          routes,
+        };
+        res.view('src/views/users/new', templateData);
+        return;
+      }
+      req.flash('success', { type: 'success', message: 'Пользователь зарегистрирован' });
+      res.redirect(routes.usersPath());
+    });    
+  });
 };

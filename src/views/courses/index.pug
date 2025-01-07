@@ -17,6 +17,9 @@ block header
           input(type = 'submit' value = 'search')
 
 block content
+  if messages
+    for message in messages
+      .alert(class=`alert-${message.type}`)= message.message
   h3  
     a(href= routes.newCoursePath()) Добавить новый курс
   if courses.length === 0

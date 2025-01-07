@@ -16,16 +16,20 @@ block content
   if error
       p= error.message
 
+  if messages
+    for message in messages
+      .alert(class=`alert-${message.type}`)= message.message
+
   form(action = routes.coursesPath(), method = 'post')
     div
       label ID:
-        input(type = 'text', name = 'id', required = true)
+        input(type = 'text', name = 'id', value = id || '', required = true)
     div
       label Title:
-        input(type = 'text', name = 'title', required = true)
+        input(type = 'text', name = 'title', value = title || '' required = true)
     div
       label Description:
-        input(type = 'text', name = 'description', required = true)
+        input(type = 'text', name = 'description', value = description || '', required = true)
    
     input(type = 'submit', value = 'Добавить')
   h3 

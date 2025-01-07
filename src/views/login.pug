@@ -15,12 +15,16 @@ block header
 block content
   if error
       p= error.message
+  if messages
+    for message in messages
+      .alert(class=`alert-${message.type}`)= message.message
+
 
   form(action = '/session', method = 'post')
     div
       label Логин:
-        input(type = 'email', name = 'email', required = true)
+        input(type = 'email', name = 'email', value = email || '', required = true)
     div
       label Пароль:
-        input(type = 'password', name = 'password', required = true)
+        input(type = 'password', name = 'password', value = pasword || '', required = true)
     input(type = 'submit', value = 'Аутентификация!')
