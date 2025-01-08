@@ -76,6 +76,7 @@ prepareDatabase();
 
 const app = fastify();
 const port = process.env.PORT || 3000;
+const host = '0.0.0.0';
 
 await app.register(view, { engine: { pug } });
 await app.register(formbody);
@@ -88,7 +89,7 @@ await app.register(flash);
 await app.register(routes);
 
 
-app.listen({ port }, () => {
+app.listen({ port, host }, () => {
   console.log(`Example app listening on port ${port}`);
 });
 
