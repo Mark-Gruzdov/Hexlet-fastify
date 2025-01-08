@@ -75,7 +75,7 @@ const prepareDatabase = () => {
 prepareDatabase();
 
 const app = fastify();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 await app.register(view, { engine: { pug } });
 await app.register(formbody);
